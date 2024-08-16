@@ -23,7 +23,8 @@
     "url": "git+https://github.com/crypsure/crypsure-plugin.git"
   },
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
