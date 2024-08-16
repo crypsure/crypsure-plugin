@@ -1,0 +1,12 @@
+packages:
+  - 'packages/*'
+
+catalog:
+  postcss-mixins: 10.0.1
+  postcss-simple-vars: 7.0.1
+  postcss-nested: 6.2.0
+  postcss: 8.4.41
+  vue: 3.4.38
+  vite: 5.4.1
+  typescript: 5.5.4
+  '@vitejs/plugin-vue': 5.1.2

@@ -1,0 +1,45 @@
+{
+  "name": "@crypsure/plugin",
+  "version": "1.0.0",
+  "description": "Crypsure plugin for payment applications",
+  "type": "module",
+  "main": "dist/crypsure-plugin.es.js",
+  "module": "dist/crypsure-plugin.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/crypsure-plugin.es.js"
+    },
+    "./dist/*.css": {
+      "import": "./dist/*.css"
+    }
+  },
+  "types": "dist/index.d.mts.d.ts",
+  "files": [
+    "lib",
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/crypsure/crypsure-plugin.git"
+  },
+  "scripts": {
+    "build": "vite build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "vue": "^3.4.31"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "catalog:",
+    "postcss": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-plugin-dts": "^4.0.3",
+    "postcss-mixins": "catalog:",
+    "postcss-simple-vars": "catalog:",
+    "postcss-nested": "catalog:",
+    "vitest": "2.0.5"
+  }
+}

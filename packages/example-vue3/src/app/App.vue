@@ -1,0 +1,183 @@
+<template>
+  <div class="checkout">
+    <div class="container">
+      <div class="checkout-payment">
+        <div class="section-head">
+          <div class="head-line1 title">
+            {{ text.title }}
+          </div>
+          <div class="head-line2 title">
+            {{ text.subtitle }}
+          </div>
+        </div>
+        <div class="payment-amount">
+          <div>{{ text.charge_amount }}</div>
+          <CrsInput v-model="price" />
+        </div>
+        <ExamplePaymentOptions v-model="paymentType" :plugins="plugins" />
+      </div>
+    </div>
+    <CrsPlugin
+      :show="!!paymentType"
+      :initialType="paymentType"
+      :availableTypes="enabled"
+      :priceUsdCents="priceCents"
+      @cancel="paymentType = null"
+    />
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { ref, computed, reactive } from 'vue'
+// eslint-disable-next-line import/extensions
+import { CrsPlugin } from '../../../plugin/dist/crypsure-plugin.es.js'
+import { CrsInput } from '@crypsure/plugin'
+import ExamplePaymentOptions from './components/ExamplePaymentOptions.vue'
+
+const text = {
+  title: 'Crypsure Plugin Example',
+  subtitle: 'Configure and run the plugin.',
+  charge_amount: 'Charge Amount (USD)',
+}
+
+const price = ref('5')
+const paymentType = ref<string | null>(null)
+
+const priceCents = computed(() => {
+  if (Number.isNaN(price.value)) {
+    return 0
+  }
+  return parseFloat(price.value) * 100
+})
+const plugins = reactive([
+  { name: 'chargebacks', checked: true },
+  { name: 'preorder', checked: true },
+  { name: 'escrow', checked: true },
+])
+const enabled = computed(() => plugins.filter((p) => p.checked).map((p) => p.name))
+</script>
+
+<style lang="postcss">
+@import '../../../plugin/dist/style.css';
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  background-color: #f9f9f9;
+
+  color: black;
+  * {
+    box-sizing: border-box;
+  }
+}
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding-top: 48px;
+  display: flex;
+  justify-content: center;
+}
+.checkout-payment {
+  width: 680px;
+}
+.title {
+  font-family: Arial, sans-serif;
+  font-weight: 700;
+}
+.checkout {
+  text-align: center;
+}
+.crs-checks {
+  margin-top: 24px;
+  display: flex;
+  justify-content: space-around;
+}
+.payment-options {
+  display: flex;
+  margin-top: 16px;
+}
+.crs-check {
+  align-self: center;
+}
+.payment-amount {
+  margin-top: 24px;
+  font-size: 15px;
+  font-family: Arial, sans-serif;
+  font-weight: 500;
+  .crs-input-wrap {
+    max-width: 200px;
+    margin: 16px auto;
+    .crs-input {
+      height: 48px;
+    }
+  }
+}
+.payment-options > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  cursor: pointer;
+  flex-grow: 1;
+}
+.payment-options > div:not(:last-child) {
+  margin-right: 16px;
+}
+.payment-crypsure {
+  display: flex;
+  background-color: #141414;
+  font-size: 15px;
+  letter-spacing: 1.4px;
+  height: 38px;
+  width: 100%;
+  text-transform: uppercase;
+  border-radius: 4px;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-top: 8px;
+}
+.payment-crypsure > img {
+  height: 22px;
+  margin-right: 8px;
+}
+.payment-paypal {
+  background-color: #0079c1;
+}
+.payment-paypal > img {
+  height: 20px;
+  margin-top: 2px;
+}
+.payment-card {
+  background-color: #1476f1;
+  color: white;
+}
+.section-head {
+  color: #908e8e;
+  border-bottom: 1px solid #d8d8d8;
+  padding-bottom: 8px;
+  margin-top: 48px;
+}
+.head-line1 {
+  letter-spacing: 0.65px;
+  font-size: 17px;
+  font-weight: 600;
+}
+.head-line2 {
+  letter-spacing: 0.42px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 2px;
+  color: #b2b2b2;
+}
+@media (max-width: 600px) {
+  .payment-options {
+    padding: 0 8px;
+  }
+  .payment-crypsure {
+    font-size: 12px;
+    letter-spacing: 1.2px;
+  }
+}
+</style>

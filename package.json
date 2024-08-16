@@ -1,0 +1,22 @@
+{
+  "name": "crypsure-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "npm run build:plugin",
+    "demo": "pnpm --filter '*demo' run dev",
+    "format": "prettier -w \"{**/*,*}.{ts,js,json}\"",
+    "format:check": "prettier --check \"{**/*,*}.{ts,js,json,vue}\"",
+    "build:plugin": "pnpm --filter '@crypsure/plugin' run build",
+    "build:demo": "pnpm --filter 'crypsure-plugin-demo' run build",
+    "lint": "oxlint .",
+    "release": "cd packages/plugin && node scripts/release.cjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "oxlint": "^0.7.2",
+    "prettier": "^3.3.3"
+  }
+}
