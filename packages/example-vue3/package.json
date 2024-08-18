@@ -1,7 +1,7 @@
 {
-  "name": "crypsure-plugin-demo",
+  "name": "crypsure-plugin-example",
   "version": "1.0.0",
-  "description": "Demo web app for Vue color picker widget",
+  "description": "Basic Crypsure plugin example",
   "main": "index.js",
   "scripts": {
     "dev": "vite",

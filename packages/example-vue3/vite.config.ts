@@ -7,7 +7,7 @@ import { defineConfig } from 'vite'
 
 const resolve = (p: string): string => path.resolve(__dirname, p)
 
-const outputName = 'crypsure-plugin-demo.es.js'
+const outputName = 'crypsure-plugin-example.es.js'
 
 const externalVue = (bundleName) => {
   return {
@@ -50,7 +50,7 @@ export default defineConfig({
     lib: {
       formats: ['es'],
       entry: [resolve('./src/index-export.ts')],
-      name: 'crypsure-plugin-demo',
+      name: 'crypsure-plugin-example',
       fileName: () => outputName,
     },
     rollupOptions: {

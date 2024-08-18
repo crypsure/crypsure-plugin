@@ -69,8 +69,8 @@ const emit = defineEmits(['cancel'])
 const props = defineProps({
   show: Boolean,
   initialType: {
-    validator: (value: string) => allPlugins.includes(value),
-    default: 'crypsure',
+    validator: (value: string | undefined) => allPlugins.includes(value ?? 'chargebacks'),
+    default: 'chargebacks',
   },
   availableTypes: {
     validator: (value) =>

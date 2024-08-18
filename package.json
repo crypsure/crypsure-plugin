@@ -5,11 +5,11 @@
   "scripts": {
     "build": "npm run build:plugin",
     "test": "pnpm --filter '@crypsure/plugin' run test",
-    "demo": "pnpm --filter '*demo' run dev",
+    "example": "pnpm --filter '*example' run dev",
     "format": "prettier -w \"{**/*,*}.{ts,js,json}\"",
     "format:check": "prettier --check \"{**/*,*}.{ts,js,json,vue}\"",
     "build:plugin": "pnpm --filter '@crypsure/plugin' run build",
-    "build:demo": "pnpm --filter 'crypsure-plugin-demo' run build",
+    "build:example": "pnpm --filter 'crypsure-plugin-example' run build",
     "lint": "oxlint .",
     "release": "cd packages/plugin && node scripts/release.cjs"
   },
