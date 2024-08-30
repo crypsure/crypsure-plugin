@@ -103,7 +103,7 @@ $bg: $grey2;
 
   label {
     @mixin medium 15px;
-    color: $dark3;
+    color: $dark2;
     letter-spacing: 0;
     position: absolute;
     background-color: transparent;
@@ -123,7 +123,7 @@ $bg: $grey2;
 
   .crs-input {
     @mixin medium 15px;
-    color: $dark3;
+    color: $dark2;
     background: $bg;
     width: 100%;
     height: 56px;

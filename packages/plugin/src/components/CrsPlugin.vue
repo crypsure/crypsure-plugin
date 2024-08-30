@@ -1,17 +1,16 @@
 <template>
   <transition name="modal">
-    <div v-if="show" class="crs-plugin-modal">
-      <div class="crs-plugin-mask" @click="emit('cancel')" />
-      <div class="crs-plugin-wrap">
+    <div v-if="show" class="crs-modal">
+      <div class="crs-mask" @click="emit('cancel')" />
+      <div class="crs-wrap">
         <div class="crs-plugin">
-          <div class="crs-plugin-title">
-            {{ ts('title') }}
-          </div>
+          <CrsHead :price="priceWithDecimal" />
+          <div class="crs-amount"></div>
           <CrsPluginTypes
             v-model:pluginType="pluginType"
             :availableTypes="availableTypes"
           />
-          <div class="crs-plugin-content-wrap">
+          <div class="crs-content-wrap">
             <transition name="plugin-content" mode="out-in">
               <CrsPluginChargebacks
                 v-if="pluginType.name === 'chargebacks'"
@@ -26,18 +25,21 @@
                 :prices="prices"
               />
             </transition>
-            <div class="crs-plugin-secure">
+            <div class="crs-secure">
               <img :src="IcLock" />
               <div>{{ ts('secure') }}</div>
             </div>
-            <div class="crs-plugin-buttons">
-              <div class="crs-plugin-continue" @click="emit('cancel')">
+            <div class="crs-buttons">
+              <div class="crs-continue" @click="emit('cancel')">
                 {{ ts('continue') }}
               </div>
-              <div class="crs-plugin-confirm">
+              <div class="crs-confirm" @click="confirm">
                 {{ ts('confirm') }}
               </div>
             </div>
+          </div>
+          <div v-if="loading" class="crs-loading">
+            <Loader />
           </div>
         </div>
       </div>
@@ -55,14 +57,17 @@ import {
   toRefs,
   onUpdated,
   reactive,
+  PropType,
 } from 'vue'
-import { allPlugins, pluginTypes as defaultPluginTypes } from '../util'
+import { allPlugins, pluginTypes as defaultPluginTypes, usePrice } from '../util'
 import { ts } from '../i18n'
 import IcLock from '../../assets/img/ic_lock.png'
+import CrsHead from './CrsHead.vue'
 import CrsPluginTypes from './CrsPluginTypes.vue'
 import CrsPluginChargebacks from './CrsPluginChargebacks.vue'
 import CrsPluginPreorder from './CrsPluginPreorder.vue'
 import CrsPluginEscrow from './CrsPluginEscrow.vue'
+import { Loader } from './widgets'
 
 const emit = defineEmits(['cancel'])
 
@@ -73,6 +78,7 @@ const props = defineProps({
     default: 'chargebacks',
   },
   availableTypes: {
+    type: Array as PropType<string[]>,
     validator: (value) =>
       value === null ||
       (Array.isArray(value) && value.every((v) => allPlugins.includes(v))),
@@ -104,14 +110,24 @@ const prices = computed(() => ({
   priceCrs: priceCrs.value,
   priceEth: priceEth.value,
 }))
+
+const loading = ref(false)
+
 watch(initialType, (newVal: string) => {
   pluginType.value = pluginTypes[newVal]
 })
+
 const escapeListener = (event: KeyboardEvent) => {
   if (event.key === 'Escape') {
     emit('cancel')
   }
 }
+
+const confirm = () => {
+  loading.value = true
+}
+
+const { priceWithDecimal } = usePrice(prices)
 
 onUpdated(() => {
   for (const name of allPlugins) {
@@ -159,7 +175,7 @@ onBeforeUnmount(() => {
   --crs-color-text-disabled: $disabled1;
 }
 
-.crs-plugin-modal {
+.crs-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -170,156 +186,164 @@ onBeforeUnmount(() => {
   justify-content: center;
   align-items: flex-start;
   padding-bottom: 40px;
-  .crs-plugin-mask {
-    background: rgba(0, 0, 0, 0.8);
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-  .crs-plugin-wrap {
-    position: relative;
-    width: 480px;
-    background: white;
-    display: flex;
-    border-radius: 4px;
-    margin-top: 5%;
-    max-height: 90%;
-    overflow-y: scroll;
-    box-shadow: 0 2px 15px 12px rgba(150, 150, 150, 0.2);
-  }
-  .crs-plugin {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-  }
-  .crs-plugin-title {
-    @mixin flex-center;
-    @mixin title 24px;
-    height: 80px;
-    min-height: 80px;
-    border-bottom: 1px solid #eee;
-    color: $grey4;
-  }
-  .plugin-content-enter-active,
-  .plugin-content-leave-active {
-    transition: opacity 0.35s ease;
-  }
+}
+.crs-mask {
+  background: rgba(0, 0, 0, 0.8);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.crs-wrap {
+  position: relative;
+  width: 480px;
+  background: white;
+  display: flex;
+  border-radius: 4px;
+  margin-top: 5%;
+  max-height: 90%;
+  overflow-y: scroll;
+  box-shadow: 0 4px 15px 12px rgba(150, 150, 150, 0.1);
+}
+.crs-loading {
+  @mixin overlay;
+  @mixin flex-center;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.crs-plugin {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.crs-title {
+  @mixin flex-center;
+  @mixin title 24px;
+  height: 80px;
+  min-height: 80px;
+  border-bottom: 1px solid #eee;
+  color: $grey4;
+}
+.plugin-content-enter-active,
+.plugin-content-leave-active {
+  transition: opacity 0.35s ease;
+}
 
-  .plugin-content-enter-from,
-  .plugin-content-leave-to {
-    opacity: 0;
+.plugin-content-enter-from,
+.plugin-content-leave-to {
+  opacity: 0;
+}
+.crs-content-wrap {
+  background-color: $grey4;
+}
+.crs-content-title {
+  @mixin semibold 13px;
+  @mixin flex-center;
+  letter-spacing: 2px;
+  color: $bg1;
+  padding: 24px 0 16px;
+}
+.crs-content {
+  @mixin flex-center-col;
+  width: 340px;
+  margin: 0 auto;
+  background-color: white;
+  border-radius: 4px;
+  padding: 16px 16px 24px 8px;
+  .crs-month,
+  .crs-year {
+    margin-right: 6px;
   }
-  .crs-plugin-content-wrap {
-    background-color: $grey4;
+  .crs-year {
+    flex-grow: 1;
   }
-  .crs-plugin-content-title {
-    @mixin text 17px;
-    @mixin flex-center;
-    color: $bg1;
-    height: 96px;
-  }
-  .crs-plugin-content {
-    @mixin flex-center-col;
-    width: 340px;
-    margin: 0 auto;
-    background-color: white;
-    border-radius: 4px;
-    padding: 16px 16px 24px 8px;
+}
 
-    .crs-plugin-content-row {
-      display: flex;
-      width: 100%;
-      &:not(:first-child) {
-        margin-top: 9px;
-      }
-    }
-    .crs-plugin-select-title {
-      @mixin flex-center;
-      @mixin title 12px;
-      justify-content: flex-end;
-      color: $grey4;
-      height: 34px;
-      width: 120px;
-      margin-right: 8px;
-    }
-    .crs-plugin-row-right {
-      @mixin flex-center;
-      @mixin title-medium 15px;
-      justify-content: flex-start;
-      flex-grow: 1;
-    }
-    .crs-plugin-price {
-      @mixin select;
-      color: var(--crs-color-text-dark);
-      flex-grow: 1;
-      position: relative;
-      justify-content: flex-start;
-      .crs-plugin-currency {
-        @mixin title 13px;
-        color: $disabled1;
-        position: absolute;
-        right: 8px;
-        top: 10px;
-      }
-    }
-    .crs-plugin-month,
-    .crs-plugin-year {
-      margin-right: 6px;
-    }
-    .crs-plugin-year {
-      flex-grow: 1;
-    }
+.crs-content-row {
+  display: flex;
+  width: 100%;
+  &:not(:first-child) {
+    margin-top: 9px;
   }
-  .crs-plugin-secure {
-    @mixin text 13px;
+}
+.crs-select-title {
+  @mixin flex-center;
+  @mixin title 12px;
+  justify-content: flex-end;
+  color: $grey4;
+  height: 34px;
+  width: 120px;
+  margin-right: 8px;
+}
+.crs-row-right {
+  @mixin flex-center;
+  @mixin medium 15px;
+  justify-content: flex-start;
+  flex-grow: 1;
+}
+.crs-price {
+  @mixin select;
+  color: var(--crs-color-text-dark);
+  flex-grow: 1;
+  position: relative;
+  justify-content: flex-start;
+}
+.crs-currency {
+  @mixin title 13px;
+  color: $disabled1;
+  position: absolute;
+  right: 8px;
+  top: 10px;
+}
+.crs-secure {
+  @mixin text 13px;
+  @mixin flex-center;
+  color: $bg1;
+  margin: 32px 0;
+  img {
+    height: 18px;
+    margin-right: 8px;
+  }
+}
+.crs-buttons {
+  @mixin flex-center;
+  height: 96px;
+  background: white;
+  > div {
     @mixin flex-center;
-    color: $bg1;
-    margin: 32px 0;
-    img {
-      height: 18px;
-      margin-right: 8px;
-    }
+    height: 34px;
+    @mixin title 10px;
+    letter-spacing: 1.7px;
+    padding: 0 24px;
+    border-radius: 17px;
+    cursor: pointer;
   }
-  .crs-plugin-buttons {
-    @mixin flex-center;
-    height: 96px;
-    background: white;
-    > div {
-      @mixin flex-center;
-      height: 34px;
-      @mixin title 10px;
-      letter-spacing: 1.7px;
-      padding: 0 24px;
-      border-radius: 17px;
-      cursor: pointer;
-    }
-    .crs-plugin-continue {
-      color: $grey4;
-      border: 1px solid $border1;
-      margin-right: 16px;
-    }
-    .crs-plugin-confirm {
-      background-color: $purple;
-      color: white;
-    }
-  }
-  @media (max-width: 600px) {
+}
+.crs-continue {
+  color: $grey4;
+  border: 1px solid $border1;
+  margin-right: 16px;
+}
+.crs-confirm {
+  background-color: $primary;
+  color: white;
+}
+@media (max-width: 600px) {
+  .crs-modal {
     padding-left: 16px;
     padding-right: 16px;
-    .crs-plugin-types {
-      font-size: 10px;
-      > div {
-        width: min-content;
-      }
+  }
+  .crs-types {
+    font-size: 10px;
+    > div {
+      width: min-content;
     }
-    .crs-plugin-content {
-      width: 100%;
-    }
-    .crs-plugin-buttons > div {
-      padding: 0 12px;
-    }
+  }
+  .crs-content {
+    width: 100%;
+  }
+  .crs-buttons > div {
+    padding: 0 12px;
   }
 }
 
@@ -332,14 +356,14 @@ onBeforeUnmount(() => {
   opacity: 0;
 }
 
-.modal-enter-active .crs-plugin-wrap,
-.modal-leave-active .crs-plugin-wrap {
+.modal-enter-active .crs-wrap,
+.modal-leave-active .crs-wrap {
   transition:
     transform 0.3s cubic-bezier(0.5, 0, 0.5, 1),
     opacity 0.3s linear;
 }
-.modal-enter-from .crs-plugin-wrap,
-.modal-leave-to .crs-plugin-wrap {
+.modal-enter-from .crs-wrap,
+.modal-leave-to .crs-wrap {
   opacity: 0;
   transform: scale(0.7) translateY(-10%);
 }

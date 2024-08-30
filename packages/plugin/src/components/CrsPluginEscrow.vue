@@ -1,40 +1,40 @@
 <template>
-  <div class="crs-plugin-escrow">
-    <div class="crs-plugin-content-title">
+  <div class="crs-escrow">
+    <div class="crs-content-title">
       {{ ts('escrow.enter') }}
     </div>
-    <div class="crs-plugin-content">
-      <div class="crs-plugin-content-row">
-        <div class="crs-plugin-select-title">
+    <div class="crs-content">
+      <div class="crs-content-row">
+        <div class="crs-select-title">
           {{ ts('chargebacks.select_label') }}
         </div>
         <CrsSelect
           v-model="currency"
-          :options="(tr('chargebacks.currency') as Record<string, string>)"
-          class="crs-plugin-row-right"
+          :options="tr('chargebacks.currency') as Record<string, string>"
+          class="crs-row-right"
         />
       </div>
-      <div class="crs-plugin-content-row">
-        <div class="crs-plugin-select-title">
+      <div class="crs-content-row">
+        <div class="crs-select-title">
           {{ ts('chargebacks.schedule') }}
         </div>
-        <div class="crs-plugin-row-right">
+        <div class="crs-row-right">
           <CrsSelect
             v-model="year"
             :options="['2021', '2022', '2023']"
-            class="crs-plugin-year"
+            class="crs-year"
           />
           <CrsSelect
             v-model="month"
             :options="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]"
-            class="crs-plugin-month"
+            class="crs-month"
             @update:modelValue="days = getDays($event)"
           />
           <CrsSelect v-model="day" :options="days" />
         </div>
       </div>
-      <div class="crs-plugin-content-row">
-        <div class="crs-plugin-select-title">
+      <div class="crs-content-row">
+        <div class="crs-select-title">
           {{ ts('chargebacks.protection') }}
         </div>
         <CrsSelect
@@ -52,17 +52,17 @@
             '45%',
             '50%',
           ]"
-          class="crs-plugin-row-right"
+          class="crs-row-right"
         />
       </div>
-      <div class="crs-plugin-content-row">
-        <div class="crs-plugin-select-title">
+      <div class="crs-content-row">
+        <div class="crs-select-title">
           {{ ts('chargebacks.price') }}
         </div>
-        <div class="crs-plugin-row-right">
-          <div class="crs-plugin-price">
+        <div class="crs-row-right">
+          <div class="crs-price">
             {{ roundedPrice || '0' }}
-            <div class="crs-plugin-currency">
+            <div class="crs-currency">
               {{ currency }}
             </div>
           </div>
@@ -102,6 +102,6 @@ const protection = ref('0%')
 </script>
 
 <style lang="postcss">
-.crs-plugin-escrow {
+.crs-escrow {
 }
 </style>

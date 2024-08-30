@@ -10,5 +10,14 @@ export const usePrice = (prices: Ref<Record<string, number>>) => {
     round(currency.value === 'ETH' ? prices.value.priceEth : prices.value.priceCrs),
   )
 
-  return { currency, roundedPrice }
+  const priceWithDecimal = computed(() => {
+    const price = (prices.value.priceUsd / 100).toLocaleString()
+    return `$${price}${price.includes('.') ? '' : '.00'}`
+  })
+
+  const priceUsd = computed(() => {
+    return `$${(prices.value.priceUsd / 100).toLocaleString()}`
+  })
+
+  return { currency, roundedPrice, priceUsd, priceWithDecimal }
 }

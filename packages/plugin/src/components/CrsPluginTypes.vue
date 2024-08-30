@@ -1,6 +1,6 @@
 <template>
-  <div class="crs-plugin-types-wrap">
-    <div class="crs-plugin-types">
+  <div class="crs-types-wrap">
+    <div class="crs-types">
       <div
         v-for="plugin in plugins"
         :id="pluginTypes[plugin].selectId"
@@ -11,7 +11,7 @@
         {{ ts(`${plugin}.label`) }}
       </div>
     </div>
-    <div class="crs-plugin-types-arrow" :style="{ left: pluginType.arrowPosition }" />
+    <div class="crs-types-arrow" :style="{ left: pluginType.arrowPosition }" />
   </div>
 </template>
 
@@ -38,43 +38,43 @@ const plugins = computed(() => availableTypes.value || allPlugins)
 <style lang="postcss">
 @import '../../css/defines.postcss';
 
-.crs-plugin-types-wrap {
+.crs-types-wrap {
   position: relative;
+}
 
-  .crs-plugin-types {
+.crs-types {
+  @mixin flex-center;
+  @mixin title 11px;
+  color: $bg1;
+  letter-spacing: 1.8px;
+  height: 56px;
+  > div {
     @mixin flex-center;
-    @mixin title 11px;
-    color: $bg1;
-    letter-spacing: 2px;
-    height: 56px;
-    > div {
-      @mixin flex-center;
-      padding: 0 16px;
-      cursor: pointer;
-      border-radius: 14px;
-      height: 28px;
-      &.active {
-        background-color: $purple;
-        color: white;
-      }
-      &:not(:last-child) {
-        margin-right: 8px;
-      }
+    padding: 0 16px;
+    cursor: pointer;
+    border-radius: 14px;
+    height: 28px;
+    &.active {
+      background-color: $primary;
+      color: black;
+    }
+    &:not(:last-child) {
+      margin-right: 8px;
     }
   }
-  .crs-plugin-types-arrow {
-    width: 0;
-    height: 0;
-    bottom: -1px;
-    position: absolute;
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: 10px solid $grey4;
-    transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-  .crs-plugin-type {
-    height: 48px;
-    display: flex;
-  }
+}
+.crs-types-arrow {
+  width: 0;
+  height: 0;
+  bottom: -1px;
+  position: absolute;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 10px solid $grey4;
+  transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.crs-type {
+  height: 48px;
+  display: flex;
 }
 </style>

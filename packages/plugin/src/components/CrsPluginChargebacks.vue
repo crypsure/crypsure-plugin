@@ -1,35 +1,35 @@
 <template>
-  <div class="crs-plugin-chargebacks">
-    <div class="crs-plugin-content-title">
+  <div class="crs-chargebacks">
+    <div class="crs-content-title">
       {{ ts('chargebacks.select') }}
     </div>
-    <div class="crs-plugin-content">
-      <div class="crs-plugin-content-row">
-        <div class="crs-plugin-select-title">
+    <div class="crs-content">
+      <div class="crs-content-row">
+        <div class="crs-select-title">
           {{ ts('chargebacks.usd_price') }}
         </div>
-        <div class="crs-plugin-row-right">
+        <div class="crs-row-right">
           {{ priceUsd }}
         </div>
       </div>
-      <div class="crs-plugin-content-row">
-        <div class="crs-plugin-select-title">
+      <div class="crs-content-row">
+        <div class="crs-select-title">
           {{ ts('chargebacks.select_label') }}
         </div>
         <CrsSelect
           v-model="currency"
-          :options="(tr('chargebacks.currency') as Record<string, string>)"
-          class="crs-plugin-row-right"
+          :options="tr('chargebacks.currency') as Record<string, string>"
+          class="crs-row-right"
         />
       </div>
-      <div class="crs-plugin-content-row">
-        <div class="crs-plugin-select-title">
+      <div class="crs-content-row">
+        <div class="crs-select-title">
           {{ ts('chargebacks.price') }}
         </div>
-        <div class="crs-plugin-row-right">
-          <div class="crs-plugin-price">
+        <div class="crs-row-right">
+          <div class="crs-price">
             {{ roundedPrice || '0' }}
-            <div class="crs-plugin-currency">
+            <div class="crs-currency">
               {{ currency }}
             </div>
           </div>
@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, toRefs } from 'vue'
+import { toRefs } from 'vue'
 import { ts, tr } from '../i18n'
 import { CrsSelect } from '../components'
 import { usePrice } from '../util'
@@ -55,14 +55,10 @@ const props = withDefaults(
 )
 const { prices } = toRefs(props)
 
-const { currency, roundedPrice } = usePrice(prices)
-
-const priceUsd = computed(() => {
-  return `$${(prices.value.priceUsd / 100).toLocaleString()}`
-})
+const { currency, roundedPrice, priceUsd } = usePrice(prices)
 </script>
 
 <style lang="postcss">
-.crs-plugin-chargebacks {
+.crs-chargebacks {
 }
 </style>

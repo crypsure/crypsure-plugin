@@ -5,9 +5,10 @@ const fallback: I18nObject = {
   title: 'Crypsure',
   secure: 'Protected by Crypsure',
   crypsure: 'CRYPSURE',
+  total: 'Total Amount',
   chargebacks: {
     label: 'DIRECT CHARGE',
-    select: 'Select your cryptocurrency below:',
+    select: 'PAY WITH',
     select_label: 'Select Crypto',
     schedule: 'Schedule',
     protection: 'Charge Protection',

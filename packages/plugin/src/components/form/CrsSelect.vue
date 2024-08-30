@@ -100,7 +100,7 @@ const setOpen = (newOpen: boolean) => {
   border-bottom-right-radius: 4px;
 }
 .crs-select-item {
-  @mixin title-regular 14px;
+  @mixin text 14px;
   @mixin flex-center;
   justify-content: flex-start;
   height: 34px;
